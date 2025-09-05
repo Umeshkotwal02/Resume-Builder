@@ -442,18 +442,19 @@ const ResumeBuilder = () => {
           <Accordion className="mb-3">
             <Accordion.Item eventKey="0">
               <Accordion.Header>
-                Education
-                <Button
-                  variant="outline-success"
-                  size="sm"
-                  className="ms-2"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    addItem("education");
-                  }}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </Button>
+                <div className="d-flex justify-content-between align-items-center w-100">
+                  <span>Education</span>
+                  <span
+                    className="btn btn-outline-success btn-sm ms-2"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addItem("education");
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <FontAwesomeIcon icon={faPlus} />
+                  </span>
+                </div>
               </Accordion.Header>
               <Accordion.Body>
                 {formData.education.map((edu, index) => (
@@ -526,18 +527,19 @@ const ResumeBuilder = () => {
           <Accordion className="mb-3">
             <Accordion.Item eventKey="0">
               <Accordion.Header>
-                Experience
-                <Button
-                  variant="outline-success"
-                  size="sm"
-                  className="ms-2"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    addItem("experience");
-                  }}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </Button>
+                <div className="d-flex justify-content-between align-items-center w-100">
+                  <span>Education</span>
+                  <span
+                    className="btn btn-outline-success btn-sm ms-2"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addItem("experience");
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <FontAwesomeIcon icon={faPlus} />
+                  </span>
+                </div>
               </Accordion.Header>
               <Accordion.Body>
                 {formData.experience.map((exp, index) => (
@@ -610,18 +612,19 @@ const ResumeBuilder = () => {
           <Accordion className="mb-3">
             <Accordion.Item eventKey="0">
               <Accordion.Header>
-                Skills
-                <Button
-                  variant="outline-success"
-                  size="sm"
-                  className="ms-2"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    addItem("skills");
-                  }}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </Button>
+                <div className="d-flex justify-content-between align-items-center w-100">
+                  <span>Skills</span>
+                  <span
+                    className="btn btn-outline-success btn-sm ms-2"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addItem("skills");
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <FontAwesomeIcon icon={faPlus} />
+                  </span>
+                </div>
               </Accordion.Header>
               <Accordion.Body>
                 {formData.skills.map((skill, index) => (
@@ -685,20 +688,19 @@ const ResumeBuilder = () => {
           {/* Projects Section */}
           <Accordion className="mb-3">
             <Accordion.Item eventKey="0">
-              <Accordion.Header>
-                Projects
-                <Button
-                  variant="outline-success"
-                  size="sm"
-                  className="ms-2"
+              <div className="d-flex justify-content-between align-items-center w-100">
+                <span>Projects</span>
+                <span
+                  className="btn btn-outline-success btn-sm ms-2"
                   onClick={(e) => {
                     e.stopPropagation();
                     addItem("projects");
                   }}
+                  style={{ cursor: "pointer" }}
                 >
                   <FontAwesomeIcon icon={faPlus} />
-                </Button>
-              </Accordion.Header>
+                </span>
+              </div>
               <Accordion.Body>
                 {formData.projects.map((project, index) => (
                   <Card key={project.id} className="mb-3">

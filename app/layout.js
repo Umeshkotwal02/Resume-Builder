@@ -5,6 +5,7 @@ import "./assets/styles/style.scss";
 import TopNavbar from "./components/header/Navbar";
 import Footer from "./components/footer/Footer";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
