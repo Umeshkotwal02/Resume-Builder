@@ -55,15 +55,15 @@ const ResumeBuilder = () => {
         description:
           "Graduated with honors. Specialized in Web Technologies and Software Engineering. Relevant coursework: Data Structures, Algorithms, Database Management, Web Development.",
       },
-      {
-        id: 2,
-        degree: "High School Diploma",
-        institution: "ABC Senior Secondary School",
-        location: "Surat, GJ",
-        period: "2013 - 2015",
-        description:
-          "Completed higher secondary education with a focus on Mathematics and Computer Science.",
-      },
+      // {
+      //   id: 2,
+      //   degree: "High School Diploma",
+      //   institution: "ABC Senior Secondary School",
+      //   location: "Surat, GJ",
+      //   period: "2013 - 2015",
+      //   description:
+      //     "Completed higher secondary education with a focus on Mathematics and Computer Science.",
+      // },
     ],
 
     experience: [
@@ -95,9 +95,6 @@ const ResumeBuilder = () => {
       { id: 5, name: "HTML5 & CSS3", level: "Expert" },
       { id: 6, name: "Bootstrap/Tailwind", level: "Advanced" },
       { id: 7, name: "Node.js & Express", level: "Intermediate" },
-      { id: 8, name: "MongoDB", level: "Intermediate" },
-      { id: 9, name: "Git/GitHub", level: "Expert" },
-      { id: 10, name: "Agile/Scrum", level: "Advanced" },
     ],
 
     projects: [
@@ -285,15 +282,40 @@ const ResumeBuilder = () => {
   const downloadPDF = () => {
     const input = resumeRef.current;
 
-    html2canvas(input, { scale: 2 }).then((canvas) => {
+    // Store original dimensions
+    const originalWidth = input.style.width;
+    const originalHeight = input.style.height;
+
+    // Set to A4 dimensions (in pixels at 96 DPI)
+    const a4Width = 794; // 210mm × 96/25.4 ≈ 794px
+    const a4Height = 1123; // 297mm × 96/25.4 ≈ 1123px
+
+    // Apply A4 dimensions to the element
+    input.style.width = `${a4Width}px`;
+    input.style.height = "auto"; // Let height adjust based on content
+    input.style.maxHeight = "none"; // Remove any height restrictions
+
+    // Force a reflow to ensure styles are applied
+    input.offsetHeight;
+
+    html2canvas(input, {
+      scale: 2,
+      width: a4Width,
+      height: input.scrollHeight,
+      windowWidth: a4Width,
+      useCORS: true,
+      logging: false,
+    }).then((canvas) => {
+      // Restore original dimensions
+      input.style.width = originalWidth;
+      input.style.height = originalHeight;
+
       const imgData = canvas.toDataURL("image/png");
-
-      // A4 size in mm
       const pdf = new jsPDF("p", "mm", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth(); // 210
-      const pageHeight = pdf.internal.pageSize.getHeight(); // 297
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
 
-      // Image dimensions
+      // Calculate image dimensions to fit A4
       const imgWidth = pageWidth;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
@@ -304,7 +326,7 @@ const ResumeBuilder = () => {
       pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
 
-      // Extra pages (if content > 1 page)
+      // Add extra pages if content is longer than one page
       while (heightLeft > 0) {
         position = heightLeft - imgHeight;
         pdf.addPage();
