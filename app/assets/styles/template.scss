@@ -8,11 +8,9 @@
   font-size: 14px;
 }
 
-
 @media print {
   @page {
-    size: A4;          /* force A4 page */
-    margin: 10mm;      /* set margin inside page */
+    margin: 1200mm; /* adjust as needed */
   }
 
   body {
@@ -20,10 +18,15 @@
     margin: 0;
   }
 
+  /* This removes browser’s default header/footer (Chrome/Edge respect it) */
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+
   body * {
     visibility: hidden;
   }
-
   .resume-preview,
   .resume-preview * {
     visibility: visible;
@@ -33,8 +36,8 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: 210mm;         /* A4 width */
-    min-height: 297mm;    /* A4 height */
+    width: 210mm;
+    min-height: 297mm;
     margin: 0 auto;
     box-shadow: none !important;
     border: none !important;
