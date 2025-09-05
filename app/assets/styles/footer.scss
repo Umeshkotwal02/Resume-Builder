@@ -1,0 +1,40 @@
+.site-footer {
+  background: #fafbfd;
+  border-top: 1px solid #e6e6e6;
+  padding: 20px 0;
+  color: #384347;
+  font-size: 0.95rem;
+
+  .footer-logo {
+    text-decoration: none;
+    .brand-name {
+      font-size: 1.2rem;
+      color: #2dc08d;
+    }
+  }
+
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+
+    li a {
+      text-decoration: none;
+      color: #384347;
+      font-weight: 500;
+      transition: 0.3s;
+
+      &:hover {
+        color: #2dc08d;
+      }
+    }
+  }
+
+  p {
+    color: #555;
+    font-size: 0.9rem;
+  }
+}

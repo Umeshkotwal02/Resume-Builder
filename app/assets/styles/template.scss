@@ -1,0 +1,47 @@
+.skills-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* two equal columns */
+  gap: 8px 16px; /* row gap & column gap */
+}
+
+.skill-item {
+  font-size: 14px;
+}
+
+
+@media print {
+  @page {
+    size: A4;          /* force A4 page */
+    margin: 10mm;      /* set margin inside page */
+  }
+
+  body {
+    -webkit-print-color-adjust: exact; /* keep colors */
+    margin: 0;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .resume-preview,
+  .resume-preview * {
+    visibility: visible;
+  }
+
+  .resume-preview {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 210mm;         /* A4 width */
+    min-height: 297mm;    /* A4 height */
+    margin: 0 auto;
+    box-shadow: none !important;
+    border: none !important;
+    page-break-after: always;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
