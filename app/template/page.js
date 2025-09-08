@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Button,
   Container,
@@ -10,7 +10,13 @@ import {
   Accordion,
 } from "react-bootstrap";
 import jsPDF from "jspdf";
-import { FaGithub, FaPhoneAlt } from "react-icons/fa";
+import {
+  FaGithub,
+  FaPhoneAlt,
+  FaRegEdit,
+  FaLinkedin,
+  FaProjectDiagram,
+} from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -27,10 +33,14 @@ import {
   faDownload,
 } from "@fortawesome/free-solid-svg-icons";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import { GiSkills } from "react-icons/gi";
 import { BsFillPersonFill } from "react-icons/bs";
-import ".././assets/styles/template.scss";
 import html2canvas from "html2canvas";
 import { useReactToPrint } from "react-to-print";
+import { FaBriefcase, FaChevronDown } from "react-icons/fa6";
+import { AiOutlineShareAlt } from "react-icons/ai";
+import { IoPersonCircleSharp } from "react-icons/io5";
+import { RiGraduationCapFill } from "react-icons/ri";
 
 const ResumeBuilder = () => {
   const [formData, setFormData] = useState({
@@ -55,15 +65,6 @@ const ResumeBuilder = () => {
         description:
           "Graduated with honors. Specialized in Web Technologies and Software Engineering. Relevant coursework: Data Structures, Algorithms, Database Management, Web Development.",
       },
-      // {
-      //   id: 2,
-      //   degree: "High School Diploma",
-      //   institution: "ABC Senior Secondary School",
-      //   location: "Surat, GJ",
-      //   period: "2013 - 2015",
-      //   description:
-      //     "Completed higher secondary education with a focus on Mathematics and Computer Science.",
-      // },
     ],
 
     experience: [
@@ -129,15 +130,20 @@ const ResumeBuilder = () => {
     ],
   });
 
+  const [resumeTitle, setResumeTitle] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeField, setActiveField] = useState(null);
   const [textFormat, setTextFormat] = useState({
     bold: false,
     italic: false,
     underline: false,
-    align: "left",
-    fontFamily: "Times New Roman",
+    align: "center",
+    fontFamily: "Arial",
   });
+  const [activeAccordion, setActiveAccordion] = useState("0");
   const resumeRef = useRef();
+  const formSectionRef = useRef();
+  const previewSectionRef = useRef();
 
   // Handle input changes
   const handleChange = (e, section = null, id = null) => {
@@ -264,21 +270,6 @@ const ResumeBuilder = () => {
     console.log("Applying formatting:", textFormat, "to field:", activeField);
   };
 
-  // Export Resume to PDF
-  // const downloadPDF = () => {
-  //   const doc = new jsPDF("p", "mm", "a4");
-
-  //   doc.html(resumeRef.current, {
-  //     callback: function (doc) {
-  //       doc.save("resume.pdf");
-  //     },
-  //     x: 10,
-  //     y: 10,
-  //     width: 190, // fits within A4
-  //     windowWidth: resumeRef.current.scrollWidth,
-  //   });
-  // };
-
   const downloadPDF = () => {
     const input = resumeRef.current;
 
@@ -334,20 +325,71 @@ const ResumeBuilder = () => {
         heightLeft -= pageHeight;
       }
 
-      pdf.save("resume.pdf");
+      const fileName =
+        (resumeTitle?.trim() || formData.name?.trim() || "resume") + ".pdf";
+
+      pdf.save(fileName);
     });
   };
 
-  return (
-    <Container fluid className="resume-builder py-4">
-      <Row>
-        {/* Left Side Form */}
-        <Col md={4} className="p-3 form-section">
-          <h4 className="mb-4">Edit Resume</h4>
+  // Handle accordion toggle
+  const handleAccordionToggle = (eventKey) => {
+    setActiveAccordion(activeAccordion === eventKey ? "" : eventKey);
+  };
 
+  return (
+    <div className="resume-builder-container">
+      <nav aria-label="breadcrumb" className="breadcrumb-nav">
+        <ol className="breadcrumb">
+          <li className="breadcrumb-item">
+            <a href="#" className="text-decoration-none">
+              Home
+            </a>
+          </li>
+          <li className="breadcrumb-item active" aria-current="page">
+            Resume Builder
+          </li>
+        </ol>
+      </nav>
+
+      <div className="header-controls">
+        <div className="resume-title-section">
+          <h4 className="resume-title">
+            {resumeTitle || formData.name
+              ? `${resumeTitle || formData.name}'s Resume`
+              : "Edit Resume"}
+          </h4>
+          <FaRegEdit
+            className="edit-icon"
+            onClick={() => {
+              setResumeTitle(resumeTitle || formData.name);
+              setIsModalOpen(true);
+            }}
+          />
+        </div>
+
+        <div className="action-buttons">
+          <div className="change-template-btn">Change Template</div>
+          <button className="btn share-btn">
+            <AiOutlineShareAlt className="fs-5" />
+          </button>
+          <button className="btn download-btn" onClick={downloadPDF}>
+            <span className="fw-bold">
+              Download <FaChevronDown className="fs-6" />
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <hr className="divider" />
+
+      <div className="builder-content">
+        {/* Left Side Form */}
+        <div className="form-section" ref={formSectionRef}>
           {/* Text Formatting Toolbar */}
-          <Card className="mb-4">
+          <Card className="format-toolbar mb-4">
             <Card.Body>
+              <h6 className="toolbar-title">Text Formatting</h6>
               <div className="d-flex flex-wrap gap-2 mb-2">
                 <Button
                   variant={textFormat.bold ? "primary" : "outline-secondary"}
@@ -407,7 +449,7 @@ const ResumeBuilder = () => {
                 </Button>
                 <Form.Select
                   size="sm"
-                  style={{ width: "120px" }}
+                  className="font-select"
                   value={textFormat.fontFamily}
                   onChange={(e) =>
                     handleFormatChange("fontFamily", e.target.value)
@@ -427,9 +469,16 @@ const ResumeBuilder = () => {
           </Card>
 
           {/* Personal Information */}
-          <Accordion defaultActiveKey="0" className="mb-3">
+          <Accordion
+            activeKey={activeAccordion}
+            onSelect={handleAccordionToggle}
+            className="mb-2 section-accordion"
+          >
             <Accordion.Item eventKey="0">
-              <Accordion.Header>Personal Information</Accordion.Header>
+              <Accordion.Header>
+                {" "}
+                <IoPersonCircleSharp className="pe-2 fs-3" /> Personal Info
+              </Accordion.Header>
               <Accordion.Body>
                 {[
                   "name",
@@ -443,7 +492,9 @@ const ResumeBuilder = () => {
                   "summary",
                 ].map((field) => (
                   <Form.Group className="mb-3" key={field}>
-                    <Form.Label className="text-capitalize">{field}</Form.Label>
+                    <Form.Label className="text-capitalize form-label">
+                      {field}
+                    </Form.Label>
                     <Form.Control
                       as={field === "summary" ? "textarea" : "input"}
                       rows={field === "summary" ? 3 : undefined}
@@ -453,6 +504,7 @@ const ResumeBuilder = () => {
                       onFocus={() =>
                         setActiveField({ section: field, id: null, field })
                       }
+                      className="form-input"
                     />
                   </Form.Group>
                 ))}
@@ -461,28 +513,41 @@ const ResumeBuilder = () => {
           </Accordion>
 
           {/* Education Section */}
-          <Accordion className="mb-3">
-            <Accordion.Item eventKey="0">
+
+          <Accordion
+            activeKey={activeAccordion}
+            onSelect={handleAccordionToggle}
+            className="mb-2 section-accordion"
+          >
+            <Accordion.Item eventKey="1">
               <Accordion.Header>
-                <div className="d-flex justify-content-between align-items-center w-100">
-                  <span>Education</span>
-                  <span
-                    className="btn btn-outline-success btn-sm ms-2"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      addItem("education");
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <FontAwesomeIcon icon={faPlus} />
-                  </span>
-                </div>
+                {" "}
+                <RiGraduationCapFill className="pe-2 fs-3" /> Education
               </Accordion.Header>
               <Accordion.Body>
+                {/* Add Education Button at the top, full width */}
+                <div className="mb-3 d-flex justify-content-end">
+                  <Button
+                    variant="success"
+                    size="sm"
+                    onClick={() => addItem("education")}
+                  >
+                    <FontAwesomeIcon icon={faPlus} className="me-1" />
+                    Add Education
+                  </Button>
+                </div>
+
+                {/* Education Items */}
+                {formData.education.length === 0 && (
+                  <p className="text-center text-muted">
+                    No education added yet.
+                  </p>
+                )}
+
                 {formData.education.map((edu, index) => (
-                  <Card key={edu.id} className="mb-3">
+                  <Card key={edu.id} className="mb-3 item-card shadow-sm">
                     <Card.Body>
-                      <div className="d-flex justify-content-end mb-2">
+                      <div className="d-flex justify-content-end mb-2 item-controls">
                         <Button
                           variant="outline-secondary"
                           size="sm"
@@ -509,6 +574,8 @@ const ResumeBuilder = () => {
                           <FontAwesomeIcon icon={faTrash} />
                         </Button>
                       </div>
+
+                      {/* Education Fields */}
                       {[
                         "degree",
                         "institution",
@@ -517,7 +584,7 @@ const ResumeBuilder = () => {
                         "description",
                       ].map((field) => (
                         <Form.Group className="mb-2" key={field}>
-                          <Form.Label className="text-capitalize">
+                          <Form.Label className="text-capitalize form-label">
                             {field}
                           </Form.Label>
                           <Form.Control
@@ -535,6 +602,8 @@ const ResumeBuilder = () => {
                                 field,
                               })
                             }
+                            className="form-input"
+                            placeholder={`Enter ${field}`}
                           />
                         </Form.Group>
                       ))}
@@ -546,28 +615,30 @@ const ResumeBuilder = () => {
           </Accordion>
 
           {/* Experience Section */}
-          <Accordion className="mb-3">
-            <Accordion.Item eventKey="0">
+          <Accordion
+            activeKey={activeAccordion}
+            onSelect={handleAccordionToggle}
+            className="mb-2 section-accordion"
+          >
+            <Accordion.Item eventKey="2">
               <Accordion.Header>
-                <div className="d-flex justify-content-between align-items-center w-100">
-                  <span>Education</span>
-                  <span
-                    className="btn btn-outline-success btn-sm ms-2"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      addItem("experience");
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <FontAwesomeIcon icon={faPlus} />
-                  </span>
-                </div>
+                <FaBriefcase className="pe-2 fs-3" /> Experience{" "}
               </Accordion.Header>
               <Accordion.Body>
+                <div className="mb-3 d-flex justify-content-end">
+                  <Button
+                    variant="success"
+                    size="sm"
+                    onClick={() => addItem("experience")}
+                  >
+                    <FontAwesomeIcon icon={faPlus} className="me-1" />
+                    Add experience
+                  </Button>
+                </div>
                 {formData.experience.map((exp, index) => (
-                  <Card key={exp.id} className="mb-3">
+                  <Card key={exp.id} className="mb-3 item-card">
                     <Card.Body>
-                      <div className="d-flex justify-content-end mb-2">
+                      <div className="d-flex justify-content-end mb-2 item-controls">
                         <Button
                           variant="outline-secondary"
                           size="sm"
@@ -602,7 +673,7 @@ const ResumeBuilder = () => {
                         "description",
                       ].map((field) => (
                         <Form.Group className="mb-2" key={field}>
-                          <Form.Label className="text-capitalize">
+                          <Form.Label className="text-capitalize form-label">
                             {field}
                           </Form.Label>
                           <Form.Control
@@ -620,6 +691,7 @@ const ResumeBuilder = () => {
                                 field,
                               })
                             }
+                            className="form-input"
                           />
                         </Form.Group>
                       ))}
@@ -631,28 +703,32 @@ const ResumeBuilder = () => {
           </Accordion>
 
           {/* Skills Section */}
-          <Accordion className="mb-3">
-            <Accordion.Item eventKey="0">
+          <Accordion
+            activeKey={activeAccordion}
+            onSelect={handleAccordionToggle}
+            className="mb-2 section-accordion"
+          >
+            <Accordion.Item eventKey="3">
               <Accordion.Header>
-                <div className="d-flex justify-content-between align-items-center w-100">
-                  <span>Skills</span>
-                  <span
-                    className="btn btn-outline-success btn-sm ms-2"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      addItem("skills");
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <FontAwesomeIcon icon={faPlus} />
-                  </span>
-                </div>
+                {" "}
+                <GiSkills className="pe-2 fs-3" />
+                Skills{" "}
               </Accordion.Header>
               <Accordion.Body>
+                <div className="mb-3 d-flex justify-content-end">
+                  <Button
+                    variant="success"
+                    size="sm"
+                    onClick={() => addItem("skills")}
+                  >
+                    <FontAwesomeIcon icon={faPlus} className="me-1" />
+                    Add Skills
+                  </Button>
+                </div>
                 {formData.skills.map((skill, index) => (
-                  <Card key={skill.id} className="mb-3">
+                  <Card key={skill.id} className="mb-3 item-card">
                     <Card.Body>
-                      <div className="d-flex justify-content-end mb-2">
+                      <div className="d-flex justify-content-end mb-2 item-controls">
                         <Button
                           variant="outline-secondary"
                           size="sm"
@@ -681,7 +757,7 @@ const ResumeBuilder = () => {
                       </div>
                       {["name", "level"].map((field) => (
                         <Form.Group className="mb-2" key={field}>
-                          <Form.Label className="text-capitalize">
+                          <Form.Label className="text-capitalize form-label">
                             {field}
                           </Form.Label>
                           <Form.Control
@@ -697,6 +773,7 @@ const ResumeBuilder = () => {
                                 field,
                               })
                             }
+                            className="form-input"
                           />
                         </Form.Group>
                       ))}
@@ -708,26 +785,31 @@ const ResumeBuilder = () => {
           </Accordion>
 
           {/* Projects Section */}
-          <Accordion className="mb-3">
-            <Accordion.Item eventKey="0">
-              <div className="d-flex justify-content-between align-items-center w-100">
-                <span>Projects</span>
-                <span
-                  className="btn btn-outline-success btn-sm ms-2"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    addItem("projects");
-                  }}
-                  style={{ cursor: "pointer" }}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </span>
-              </div>
+          <Accordion
+            activeKey={activeAccordion}
+            onSelect={handleAccordionToggle}
+            className="mb-2 section-accordion"
+          >
+            <Accordion.Item eventKey="4">
+              <Accordion.Header>
+                {" "}
+                <FaProjectDiagram className="pe-2 fs-3" /> Projects{" "}
+              </Accordion.Header>
               <Accordion.Body>
+                <div className="mb-3 d-flex justify-content-end">
+                  <Button
+                    variant="success"
+                    size="sm"
+                    onClick={() => addItem("projects")}
+                  >
+                    <FontAwesomeIcon icon={faPlus} className="me-1" />
+                    Add projects
+                  </Button>
+                </div>
                 {formData.projects.map((project, index) => (
-                  <Card key={project.id} className="mb-3">
+                  <Card key={project.id} className="mb-3 item-card">
                     <Card.Body>
-                      <div className="d-flex justify-content-end mb-2">
+                      <div className="d-flex justify-content-end mb-2 item-controls">
                         <Button
                           variant="outline-secondary"
                           size="sm"
@@ -756,7 +838,7 @@ const ResumeBuilder = () => {
                       </div>
                       {["name", "technologies", "description"].map((field) => (
                         <Form.Group className="mb-2" key={field}>
-                          <Form.Label className="text-capitalize">
+                          <Form.Label className="text-capitalize form-label">
                             {field}
                           </Form.Label>
                           <Form.Control
@@ -774,6 +856,7 @@ const ResumeBuilder = () => {
                                 field,
                               })
                             }
+                            className="form-input"
                           />
                         </Form.Group>
                       ))}
@@ -784,28 +867,34 @@ const ResumeBuilder = () => {
             </Accordion.Item>
           </Accordion>
 
-          <Button variant="success" onClick={downloadPDF} className="w-100">
-            <FontAwesomeIcon icon={faDownload} className="me-2" />
-            Download PDF
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() => window.print()}
-            className="w-100 mt-2 no-print"
-          >
-            🖨️ Print Resume
-          </Button>
-        </Col>
+          <div className="action-buttons-bottom d-flex gap-2">
+            <Button
+              variant="success"
+              onClick={downloadPDF}
+              className="download-pdf-btn flex-grow-1"
+            >
+              <FontAwesomeIcon icon={faDownload} className="me-2" />
+              Download PDF
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handlePrint}
+              className="print-btn flex-grow-1"
+            >
+              🖨️ Print Resume
+            </Button>
+          </div>
+        </div>
 
         {/* Right Side Resume Preview */}
-        <Col md={8} className="p-4">
+        <div className="preview-section" ref={previewSectionRef}>
           <div
             ref={resumeRef}
-            className="resume-preview shadow-lg p-4 bg-white"
+            className="resume-preview"
             style={{ fontFamily: textFormat.fontFamily }}
           >
             <h1
-              className="text-center mb-1"
+              className="resume-name"
               style={{
                 fontWeight: textFormat.bold ? "bold" : "normal",
                 textAlign: textFormat.align,
@@ -814,7 +903,7 @@ const ResumeBuilder = () => {
               {formData.name}
             </h1>
             <h4
-              className="text-center"
+              className="resume-title-preview"
               style={{
                 fontStyle: textFormat.italic ? "italic" : "normal",
                 textAlign: textFormat.align,
@@ -824,102 +913,92 @@ const ResumeBuilder = () => {
               {formData.title}
             </h4>
 
-            <div className="d-flex justify-content-center">
-              <span className="me-2">
-                {" "}
-                <span className="me-1">
-                  {" "}
-                  <MdEmail />
-                </span>{" "}
-                {formData.email}
-              </span>
-              <span className="me-2">|</span>
-              <span className="me-2">
-                <span className="me-1">
-                  {" "}
-                  <FaPhoneAlt />
-                </span>{" "}
-                {formData.phone}
-              </span>
-              <span className="me-2">|</span>
-              <span>
-                <span className="me-1">
-                  {" "}
-                  <FaMapMarkerAlt />
-                </span>{" "}
-                {formData.location}
-              </span>
-            </div>
-
-            <div className="d-flex justify-content-center">
-              <span className="me-2">
-                {" "}
-                <span className="me-1">
-                  {" "}
-                  <MdEmail />
-                </span>{" "}
-                {formData.github}
-              </span>
-              <span className="me-2">|</span>
-              <span className="me-2">
-                <span className="me-1">
-                  {" "}
-                  <FaGithub />
-                </span>{" "}
-                {formData.linkedin}
-              </span>
-              <span className="me-2">|</span>
-              <span>
-                <span className="me-1">
-                  {" "}
-                  <BsFillPersonFill />
-                </span>{" "}
-                {formData.portfolio}
-              </span>
+            <div className="contact-info">
+              <div className="contact-line">
+                <span className="contact-item">
+                  <MdEmail className="contact-icon" />
+                  {formData.email}
+                </span>
+                <span className="contact-separator">|</span>
+                <span className="contact-item">
+                  <FaPhoneAlt className="contact-icon" />
+                  {formData.phone}
+                </span>
+                <span className="contact-separator">|</span>
+                <span className="contact-item">
+                  <FaMapMarkerAlt className="contact-icon" />
+                  {formData.location}
+                </span>
+              </div>
+              <div className="contact-line">
+                <span className="contact-item">
+                  <FaGithub className="contact-icon" />
+                  {formData.github}
+                </span>
+                <span className="contact-separator">|</span>
+                <span className="contact-item">
+                  <FaLinkedin className="contact-icon" />
+                  {formData.linkedin}
+                </span>
+                <span className="contact-separator">|</span>
+                <span className="contact-item">
+                  <BsFillPersonFill className="contact-icon" />
+                  {formData.portfolio}
+                </span>
+              </div>
             </div>
 
             <hr />
 
-            <h5>Summary</h5>
-            <p>{formData.summary}</p>
+            <h5 className="section-title">Summary</h5>
+            <p className="summary-text">{formData.summary}</p>
 
-            <hr />
-
-            <h5>Education</h5>
+            {formData.education.length > 0 && (
+              <>
+                <hr className="" />
+                <h5 className="section-title"> Education</h5>
+              </>
+            )}
             {formData.education.map((edu) => (
-              <div key={edu.id} className="mb-3">
+              <div key={edu.id} className="education-item">
                 <div className="d-flex justify-content-between">
-                  <strong>{edu.degree}</strong>
-                  <span>{edu.period}</span>
+                  <strong className="degree">{edu.degree}</strong>
+                  <span className="period">{edu.period}</span>
                 </div>
                 <div className="d-flex justify-content-between">
-                  <em>{edu.institution}</em>
-                  <span>{edu.location}</span>
+                  <em className="institution">{edu.institution}</em>
+                  <span className="location">{edu.location}</span>
                 </div>
-                <p>{edu.description}</p>
+                <p className="education-description">{edu.description}</p>
               </div>
             ))}
 
-            <hr />
-
-            <h5>Experience</h5>
+            {formData.experience.length > 0 && (
+              <>
+                <hr className="" />
+                <h5 className="section-title">Experience</h5>
+              </>
+            )}
             {formData.experience.map((exp) => (
-              <div key={exp.id} className="mb-3">
+              <div key={exp.id} className="experience-item">
                 <div className="d-flex justify-content-between">
-                  <strong>{exp.position}</strong>
-                  <span>{exp.period}</span>
+                  <strong className="position">{exp.position}</strong>
+                  <span className="period">{exp.period}</span>
                 </div>
                 <div className="d-flex justify-content-between">
-                  <em>{exp.company}</em>
-                  <span>{exp.location}</span>
+                  <em className="company">{exp.company}</em>
+                  <span className="location">{exp.location}</span>
                 </div>
-                <p>{exp.description}</p>
+                <p className="experience-description">{exp.description}</p>
               </div>
             ))}
 
-            <hr />
-
-            <h5>Skills</h5>
+            {formData.skills.length > 0 && (
+              <>
+                <hr className="" />
+                <h5 className="section-title">Skills</h5>
+              </>
+            )}
             <div className="skills-grid">
               {formData.skills.map((skill) => (
                 <div key={skill.id} className="skill-item">
@@ -928,22 +1007,75 @@ const ResumeBuilder = () => {
               ))}
             </div>
 
-            <hr />
-
-            <h5>Projects</h5>
+            {formData.projects.length > 0 && (
+              <>
+                <hr className="" />
+                <h5 className="section-title">Projects</h5>
+              </>
+            )}
             {formData.projects.map((project) => (
-              <div key={project.id} className="mb-3">
-                <strong>{project.name}</strong>
-                <p className="mb-1">
+              <div key={project.id} className="project-item">
+                <strong className="project-name">{project.name}</strong>
+                <p className="project-tech">
                   <em>Technologies: {project.technologies}</em>
                 </p>
-                <p>{project.description}</p>
+                <p className="project-description">{project.description}</p>
               </div>
             ))}
           </div>
-        </Col>
-      </Row>
-    </Container>
+        </div>
+      </div>
+
+      {isModalOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="modal-backdrop show custom-backdrop"
+            onClick={() => setIsModalOpen(false)}
+          ></div>
+
+          {/* Modal */}
+          <div className="modal fade show d-block" tabIndex="-1" role="dialog">
+            <div className="modal-dialog modal-dialog-centered" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Edit Resume Title</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => setIsModalOpen(false)}
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={resumeTitle}
+                    onChange={(e) => setResumeTitle(e.target.value)}
+                  />
+                </div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setIsModalOpen(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => setIsModalOpen(false)}
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 

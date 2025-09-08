@@ -1,16 +1,12 @@
 @import "_var";
 
 .logo {
-  width: 4rem;
-}
-
-.logo {
-  width: 3rem;
+  width: 2.5rem;
   height: auto;
 }
 
 .hero-bg {
-  background: #ffffff; // clean white
+  background: #121418; // clean white
   position: sticky;
   top: 0;
   z-index: 1030;
@@ -31,11 +27,11 @@
 }
 
 .about-btn {
-  color: #384347 !important;
+  color: #fff !important;
   background-color: transparent;
-  border: 2px solid #384347;
+  border: 1px solid #fff;
   border-radius: 10px;
-  padding: 6px 12px;
+  padding: 5px 10px;
   font-weight: 500;
   transition: all 0.3s ease;
 
