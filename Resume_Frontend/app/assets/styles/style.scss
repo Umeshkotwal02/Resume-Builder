@@ -1,0 +1,29 @@
+@import "_var";
+@import "home";
+@import "about";
+@import "template";
+@import "footer";
+@import "navbar";
+@import "signin";
+
+.flex-just-align {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.them-font {
+  font-family: "__nextjs-Geist Mono";
+}
+
+.fs-11 {
+  font-size: 1.25rem;
+}
+
+.text-color {
+  color: #384347;
+}
+
+.icon-color{
+  color: #5F4DC7;
+}
