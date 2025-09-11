@@ -1,0 +1,194 @@
+@import "_var";
+
+.home-h1-text {
+  font-weight: 500;
+  font-size: 58px;
+  line-height: 76px;
+  margin-top: 32px;
+  margin-bottom: 16px;
+}
+
+.HeroSection_headerGradient__zJ_5v {
+  background: linear-gradient(90deg, #604cc7, #44327b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.HeroSection_headerGradient__zJ_5v {
+  background: linear-gradient(90deg, #604cc7, #44327b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.build-home-btn {
+  background-color: #2dc08d;
+  color: #fff;
+  border: none;
+  font-family: Rubik, Open Sans, sans-serif;
+  font-weight: 500 !important;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  text-align: center;
+  text-decoration: none !important;
+  white-space: nowrap;
+  vertical-align: middle;
+  height: -moz-fit-content;
+  height: fit-content;
+  transition: all 0.3s ease-in-out;
+  padding: 10px;
+}
+
+.HeroSection_backgroundImage {
+  background-image: url("../images/bg-img.svg");
+  background-position: center;
+  object-fit: fill;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.stats-wrap {
+  margin-bottom: 40px;
+}
+.stats-wrap .stats-inner {
+  display: flex;
+  flex-wrap: nowrap;
+  max-height: 120px;
+  margin: 0 -24px;
+}
+.stats-wrap .stats-inner .stats {
+  width: 170px;
+  padding: 0 24px;
+  border-right: 1px solid #a053cf;
+}
+
+.stats-wrap .stats-inner .stats .stats-percentage {
+  position: relative;
+  background-image: url(https://www.resumebuilder.com/wp-content/themes/resumebuilder/assets/images/2023/arrow-up.svg);
+  background-repeat: no-repeat;
+  background-position: center left;
+  background-size: 31px 26px;
+  font-family: "Lexend", sans-serif;
+  font-weight: 500;
+  font-size: 36px;
+  line-height: 48px;
+  letter-spacing: -0.72px;
+  padding-left: 45px;
+  color: var(--text-color);
+  margin-bottom: 5px;
+}
+
+.stats-wrap .stats-inner .stats .stats-percentage span {
+  background: linear-gradient(90deg, #a053cf 62.14%, #ef59a5 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+.stats-wrap .stats-inner .stats p {
+  font-family: "Lexend", sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--text-color);
+  background: linear-gradient(90deg, #a053cf 62.14%, #ef59a5 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: capitalize;
+}
+
+.template-slider {
+  padding: 2rem;
+
+  .template-card {
+    position: relative;
+    text-align: center;
+
+    .image-wrap {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+
+      img {
+        transition: transform 0.4s ease;
+      }
+
+      &:hover img {
+        transform: scale(1.05);
+      }
+
+      .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      &:hover .overlay {
+        opacity: 1;
+      }
+
+      .choose-btn {
+        background: #2dc08d;
+        color: #fff;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+
+        &:hover {
+          background: #28a97c;
+        }
+      }
+    }
+  }
+}
+
+/* ---------------------------------- ATS Section Start ------------------------- */
+.ats-sec-bg {
+  background: #2d3639;
+  background-image: url("../images/ats-bg.svg");
+  // background-image: url("../images/ats-bg-2.svg");
+  background-position: right;
+  object-fit: fill;
+  background-size: auto;
+  background-repeat: no-repeat;
+}
+
+.bg-ats-card {
+  background-color: rgba(156, 178, 220, 0.1);
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.bg-ats-card-2 {
+  background-color: rgba(156, 178, 220, 0.1);
+  border-radius: 5px;
+  position: relative;
+  left: 15%;
+  margin-bottom: 15px;
+}
+
+.bg-ats-card-3 {
+  background-color: rgba(156, 178, 220, 0.1);
+  border-radius: 5px;
+  position: relative;
+  left: 30%;
+  margin-bottom: 21px;
+}

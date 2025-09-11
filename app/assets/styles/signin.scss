@@ -1,0 +1,18 @@
+.auth-page {
+  align-items: stretch;
+  background: linear-gradient(320deg, #ebe6f8, #fefefe);
+  flex-grow: 1;
+  min-height: 92vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  .form-check-input:checked {
+    background-color: rgba(45, 192, 141);
+    border-color: rgba(45, 192, 141);
+  }
+  .form-check-input:focus {
+    border-color: rgba(45, 192, 141);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(45, 192, 141, 0.4);
+  }
+}
